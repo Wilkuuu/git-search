@@ -1,16 +1,25 @@
 import React from "react";
+import Select from 'react-select'
 
 export default class SearchGit extends React.Component {
-    constructor(props){
+
+    options = [
+        { value: 'user', label: 'User' },
+        { value: 'repository', label: 'Repository' },
+      ]
+
+
+    constructor(props) {
         super(props)
-        this.state = {value: ''};
+        this.state = { value: '', type: '' };
 
         this.searchValue = this.searchValue.bind(this)
         this.handleChange = this.handleChange.bind(this)
+        this.selectChange = this.selectChange.bind(this)
     }
 
-    searchValue(event){
-        console.warn(this.state.value, this.props.searchType)
+    searchValue(event) {
+        console.warn(this.state)
         event.preventDefault();
         fetch(this.getSearchUrl())
             .then(response => response.json())
@@ -21,24 +30,33 @@ export default class SearchGit extends React.Component {
             })
     }
 
-    handleChange(event){
-        this.setState({value: event.target.value})
+    handleChange(event) {
+        this.setState({ value: event.target.value })
     }
 
-    getSearchUrl(){
-        return `https://api.github.com/${this.props.searchType === 'user' ? `users/${this.state.value}` : `search/repositories?q=${this.state.value}{&page,50,sort,order}`}`
+    selectChange(event) {
+        console.warn(event.target.value)
+        this.setState({ type: event.target.value })
+    }
+
+    getSearchUrl() {
+        //TODO change if select changed
+        return `https://api.github.com/${this.props.searchType === 'user' ? `users/${this.state.value}` : `search/repositories?q=${this.state.value}&1,50,sort,order`}`
 
     }
 
-    render(){
+    render() {
         return (
             <div>
-           <div>Git Searcher {this.props.searchType}</div> 
-           <form onSubmit={this.searchValue}>     
-           <input type="text" value={this.state.value} onChange={this.handleChange} ></input>       
-           <button type="submit">Search</button>   
-           </form>
-           </div>
+                <div>Git Searcher </div>
+                <form onSubmit={this.searchValue}>
+                    <input type="text" value={this.state.value} onChange={this.handleChange} ></input>
+                    <select value={this.state.type} onChange={this.selectChange}>
+                      {this.options.map(e => <option value={e.value} key={e.label}>{e.label}</option>)}
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+            </div>
         );
     }
 }
