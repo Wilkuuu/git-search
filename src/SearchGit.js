@@ -41,7 +41,7 @@ export default class SearchGit extends React.Component {
 
     getSearchUrl() {
         //TODO change if select changed
-        return `https://api.github.com/${this.props.searchType === 'user' ? `users/${this.state.value}` : `search/repositories?q=${this.state.value}&1,50,sort,order`}`
+        return `https://api.github.com/${this.state.type === 'user' ? `users/${this.state.value}` : `search/repositories?q=${this.state.value}&1,50,sort,order`}`
 
     }
 
