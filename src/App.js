@@ -19,8 +19,7 @@ function App() {
           Learn React
         </a>
       </header> */}
-      <SearchGit searchType='user'/>
-      <SearchGit searchType='repo'/>
+      <SearchGit/>
 
     </div>
   );
