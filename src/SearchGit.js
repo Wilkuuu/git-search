@@ -1,5 +1,4 @@
 import React, { useState, useCallback } from "react";
-import Select from 'react-select'
 
 export default class SearchGit extends React.Component {
 
@@ -24,13 +23,11 @@ export default class SearchGit extends React.Component {
         event.preventDefault();
         this.setState({ loader: true });
         fetch(this.getSearchUrl())
-            .then(response => response.json()).catch(e => {
-                console.error('MY EERROR', e)
-                this.setState({ error: e })
-            })
+            .then(response => response.json())
             .then(res => {
                 console.warn(res)
-                this.setState({ data: res.items })
+                if(res)
+                this.setState({ data: res.items || [] })
             }).catch(e => {
                 console.error('MY EERROR', e)
                 this.setState({ error: e })
@@ -53,7 +50,7 @@ export default class SearchGit extends React.Component {
     }
 
     getSearchUrl() {
-        return `https://api.github.com/${this.state.type === 'user' ? `search/users?q=${this.state.value}` : `search/repositories?q=${this.state.value}&1,50,sort,order`}`
+        return `https://api.github.com/${this.state.type === 'user' ? `search/users?q=${this.state.value}&page=1&per_page=50` : `search/repositories?q=${this.state.value}&page=1&per_page=50`}`
 
     }
     logSstate() {
@@ -94,7 +91,7 @@ export default class SearchGit extends React.Component {
                                     {this.state.data.map(e => {
                                         return <tr>
                                             <td>{e.login}</td>
-                                            <td>{e.repository}</td>
+                                            <td>{e.name}</td>
 
                                         </tr>
                                     })}
