@@ -19,7 +19,6 @@ export default class SearchGit extends React.Component {
     }
 
     searchValue(event) {
-        console.warn(this.state)
         event.preventDefault();
         this.setState({ loader: true });
         fetch(this.getSearchUrl())
@@ -27,7 +26,8 @@ export default class SearchGit extends React.Component {
             .then(res => {
                 console.warn(res)
                 if(res)
-                this.setState({ data: res.items || [] })
+                var temp = res.items.map(e => {return {...e, type: e.type || this.state.type}})
+                this.setState({ data: temp || [] })
             }).catch(e => {
                 console.error('MY EERROR', e)
                 this.setState({ error: e })
@@ -41,7 +41,6 @@ export default class SearchGit extends React.Component {
     }
 
     selectChange(event) {
-        console.warn(event.target.value)
         this.setState({ type: event.target.value })
     }
 
@@ -53,9 +52,7 @@ export default class SearchGit extends React.Component {
         return `https://api.github.com/${this.state.type === 'user' ? `search/users?q=${this.state.value}&page=1&per_page=50` : `search/repositories?q=${this.state.value}&page=1&per_page=50`}`
 
     }
-    logSstate() {
-        console.warn(this.state)
-    }
+
 
     renderTable() {
 
@@ -85,6 +82,8 @@ export default class SearchGit extends React.Component {
                                     <tr>
                                         <th>User name</th>
                                         <th>Repository name</th>
+                                        <th>Record type</th>
+
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -92,6 +91,7 @@ export default class SearchGit extends React.Component {
                                         return <tr>
                                             <td>{e.login}</td>
                                             <td>{e.name}</td>
+                                            <td>{e.type}</td>
 
                                         </tr>
                                     })}
