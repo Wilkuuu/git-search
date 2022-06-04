@@ -44,7 +44,11 @@ export default class SearchGit extends React.Component {
 
     selectItem(e, i){
         this.setState({activeId: i})
-        console.warn('selectImte', i ,e)
+        // console.warn('selectImte', i ,e)
+    }
+
+    openNewTab(e){
+        window.open(e.html_url, '_blank', 'noopener,noreferrer')
     }
 
     searchValue(event) {
@@ -114,8 +118,8 @@ export default class SearchGit extends React.Component {
                                 </thead>
                                 <tbody>
                                     {this.state.data.map((e, i) => {
-                                        return <tr className={i === this.state.activeId ? "selected" : ''} onClick={() => this.selectItem(e, i)}>
-                                            <td>{e.login}</td>
+                                        return <tr className={i === this.state.activeId ? "selected" : ''} onClick={() => this.selectItem(e, i)} onDoubleClick={this.openNewTab(e)}>
+                                            <td>{e.login || e.owner.login}</td>
                                             <td>{e.name}</td>
                                             <td>{e.type}</td>
 
