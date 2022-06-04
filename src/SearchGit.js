@@ -49,13 +49,14 @@ export default class SearchGit extends React.Component {
 
     searchValue(event) {
         event.preventDefault();
-        this.setState({loader: true});
+        this.setState({ loader: true });
         fetch(this.getSearchUrl())
             .then(response => response.json())
             .then(res => {
                 console.warn(res)
-                if (res)
-                    this.setState({data: res.items || []})
+                if(res)
+                var temp = res.items.map(e => {return {...e, type: e.type || this.state.type}})
+                this.setState({ data: temp || [] })
             }).catch(e => {
             console.error('MY EERROR', e)
             this.setState({error: e})
@@ -75,7 +76,7 @@ export default class SearchGit extends React.Component {
     }
 
     disableLoader() {
-        this.setState({loader: false});
+        this.setState({ loader: false });
     }
 
     getSearchUrl() {
@@ -84,6 +85,7 @@ export default class SearchGit extends React.Component {
     }
 
 
+    }
 
     isValid() {
         return !(!!this.state.type && this.state.value.length > 2)
@@ -106,19 +108,22 @@ export default class SearchGit extends React.Component {
                         <div >
                             <table>
                                 <thead>
-                                <tr>
-                                    <th>User name</th>
-                                    <th>Repository name</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {this.state.data.map((e, i) => {
-                                    return <tr  className={i === this.state.activeId ? "selected" : ""} onClick={() => this.selectItem(e, i)} onKeyDown={ this.handleKeyDown }>
-                                        <td>{e.login}</td>
-                                        <td>{e.name}</td>
+                                    <tr>
+                                        <th>User name</th>
+                                        <th>Repository name</th>
+                                        <th>Record type</th>
 
                                     </tr>
-                                })}
+                                </thead>
+                                <tbody>
+                                    {this.state.data.map(e => {
+                                        return <tr>
+                                            <td>{e.login}</td>
+                                            <td>{e.name}</td>
+                                            <td>{e.type}</td>
+
+                                        </tr>
+                                    })}
                                 </tbody>
                             </table>
                         </div>
