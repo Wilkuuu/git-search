@@ -84,9 +84,6 @@ export default class SearchGit extends React.Component {
 
     }
 
-
-    }
-
     isValid() {
         return !(!!this.state.type && this.state.value.length > 2)
     }
@@ -104,7 +101,7 @@ export default class SearchGit extends React.Component {
                 </form>
                 {this.state.loader ? <div><h2>Loading data</h2></div> : null}
                 {
-                    this.state.data.length ?
+                    this.state.data.length && !this.state.loader ?
                         <div >
                             <table>
                                 <thead>
@@ -127,7 +124,7 @@ export default class SearchGit extends React.Component {
                                 </tbody>
                             </table>
                         </div>
-                        : <div>No data found</div>
+                        : <div>{this.state.loader ? '' : 'No data found'}</div>
                 }
                 {
                     this.state.error ?
