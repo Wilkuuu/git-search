@@ -113,8 +113,8 @@ export default class SearchGit extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.data.map(e => {
-                                        return <tr>
+                                    {this.state.data.map((e, i) => {
+                                        return <tr className={i === this.state.activeId ? "selected" : ''} onClick={() => this.selectItem(e, i)}>
                                             <td>{e.login}</td>
                                             <td>{e.name}</td>
                                             <td>{e.type}</td>
