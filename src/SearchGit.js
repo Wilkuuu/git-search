@@ -1,21 +1,54 @@
-import React, { useState, useCallback } from "react";
-
+import React, {useState, useCallback} from "react";
+import './App.css';
 export default class SearchGit extends React.Component {
 
     options = [
-        { value: '', label: '' },
-        { value: 'user', label: 'User' },
-        { value: 'repository', label: 'Repository' },
+        {value: '', label: ''},
+        {value: 'user', label: 'User'},
+        {value: 'repository', label: 'Repository'},
     ]
 
 
     constructor(props) {
         super(props)
-        this.state = { value: '', type: '', loader: false, data: [], error: false };
-
+        this.state = {
+            value: '',
+            type: '',
+            loader: false,
+            data: [],
+            error: false,
+            cursor: 0,
+            result: [],
+            activeId: ''
+        };
+        this.handleKeyDown = this.handleKeyDown.bind(this)
         this.searchValue = this.searchValue.bind(this)
         this.handleChange = this.handleChange.bind(this)
         this.selectChange = this.selectChange.bind(this)
+        this.selectItem = this.selectItem.bind(this)
+    }
+
+    handleKeyDown(e) {
+        const { cursor, result } = this.state
+        // arrow up/down button should select next/previous list element
+        if (e.keyCode === 38 && cursor > 0) {
+            this.setState( prevState => ({
+                cursor: prevState.cursor - 1
+            }))
+        } else if (e.keyCode === 40 && cursor < result.length - 1) {
+            this.setState( prevState => ({
+                cursor: prevState.cursor + 1
+            }))
+        }
+    }
+
+    selectItem(e, i){
+        this.setState({activeId: i})
+        // console.warn('selectImte', i ,e)
+    }
+
+    openNewTab(e){
+        window.open(e.html_url, '_blank', 'noopener,noreferrer')
     }
 
     searchValue(event) {
@@ -29,19 +62,21 @@ export default class SearchGit extends React.Component {
                 var temp = res.items.map(e => {return {...e, type: e.type || this.state.type}})
                 this.setState({ data: temp || [] })
             }).catch(e => {
-                console.error('MY EERROR', e)
-                this.setState({ error: e })
-            }).finally(() => {
-                this.disableLoader()
-            })
+            console.error('MY EERROR', e)
+            this.setState({error: e})
+        }).finally(() => {
+            this.disableLoader()
+        })
     }
 
     handleChange(event) {
-        this.setState({ value: event.target.value })
+        this.setState({value: event.target.value})
     }
 
+
     selectChange(event) {
-        this.setState({ type: event.target.value })
+        console.warn(event.target.value)
+        this.setState({type: event.target.value})
     }
 
     disableLoader() {
@@ -53,11 +88,6 @@ export default class SearchGit extends React.Component {
 
     }
 
-
-    renderTable() {
-
-    }
-
     isValid() {
         return !(!!this.state.type && this.state.value.length > 2)
     }
@@ -65,9 +95,9 @@ export default class SearchGit extends React.Component {
     render() {
         return (
             <div>
-                <div>Git Searcher </div>
+                <div>Git Searcher</div>
                 <form onSubmit={this.searchValue}>
-                    <input type="text" value={this.state.value} onChange={this.handleChange} ></input>
+                    <input type="text" value={this.state.value} onChange={this.handleChange}></input>
                     <select value={this.state.type} onChange={this.selectChange}>
                         {this.options.map(e => <option value={e.value} key={e.label}>{e.label}</option>)}
                     </select>
@@ -75,8 +105,8 @@ export default class SearchGit extends React.Component {
                 </form>
                 {this.state.loader ? <div><h2>Loading data</h2></div> : null}
                 {
-                    this.state.data.length ?
-                        <div>
+                    this.state.data.length && !this.state.loader ?
+                        <div >
                             <table>
                                 <thead>
                                     <tr>
@@ -87,9 +117,9 @@ export default class SearchGit extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.data.map(e => {
-                                        return <tr>
-                                            <td>{e.login}</td>
+                                    {this.state.data.map((e, i) => {
+                                        return <tr className={i === this.state.activeId ? "selected" : ''} onClick={() => this.selectItem(e, i)} onDoubleClick={this.openNewTab(e)}>
+                                            <td>{e.login || e.owner.login}</td>
                                             <td>{e.name}</td>
                                             <td>{e.type}</td>
 
@@ -98,7 +128,7 @@ export default class SearchGit extends React.Component {
                                 </tbody>
                             </table>
                         </div>
-                        : <div>No data found</div>
+                        : <div>{this.state.loader ? '' : 'No data found'}</div>
                 }
                 {
                     this.state.error ?
