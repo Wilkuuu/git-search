@@ -110,6 +110,7 @@ export default class SearchGit extends React.Component {
                             <table>
                                 <thead>
                                     <tr>
+                                        <th></th>
                                         <th>User name</th>
                                         <th>Repository name</th>
                                         <th>Record type</th>
@@ -118,7 +119,8 @@ export default class SearchGit extends React.Component {
                                 </thead>
                                 <tbody>
                                     {this.state.data.map((e, i) => {
-                                        return <tr className={i === this.state.activeId ? "selected" : ''} onClick={() => this.selectItem(e, i)} onDoubleClick={this.openNewTab(e)}>
+                                        return <tr className={i === this.state.activeId ? "selected" : ''} onClick={() => this.selectItem(e, i)}>
+                                            <td>{i+1}</td>
                                             <td>{e.login || e.owner.login}</td>
                                             <td>{e.name}</td>
                                             <td>{e.type}</td>
