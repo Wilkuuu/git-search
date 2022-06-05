@@ -41,24 +41,36 @@ const GitSearch3 = () => {
     const [cursor, setCursor] = useState(0);
     const [hovered, setHovered] = useState(undefined);
     const [error, setError] = useState(null);
-    const [isLoaded, setIsLoaded] = useState(false);
+    const [isLoaded, setIsLoaded] = useState(true);
     const [gitData, setGitData] = useState([]);
 
-    const search = (event) =>{
+    const search = async (event) => {
         event.preventDefault();
         setIsLoaded(false)
-        fetch(`https://api.github.com/search/users?q=${searchValue}&page=1&per_page=50`)
-            .then(res => res.json())
-            .then(
-                (data) => {
-                    setIsLoaded(true);
-                    setGitData(data.items);
-                },
-                (error) => {
-                    setIsLoaded(true);
-                    setError(error);
-                }
-            )
+
+        await Promise.all([
+            fetch(`https://api.github.com/search/users?q=${searchValue}&page=1&per_page=50`),
+            fetch(`https://api.github.com/search/repositories?q=${searchValue}&page=1&per_page=50`)
+        ]).then( (responses) => {
+            return Promise.all(responses.map( (response) => {
+                return response.json();
+            }));
+        }).then( (data) => {
+            console.log(data);
+            let compareData = []
+            data.forEach(e =>  compareData = compareData.concat(e.items))
+            console.log(compareData);
+            compareData = compareData.map(e => {return {...e, login: e.login || e.name, type: e.type || 'Repository'}})
+            setGitData(compareData)
+
+        }).catch( (error) => {
+            // if there's an error, log it
+            console.log(error);
+        }).finally(() => {
+            setIsLoaded(true)
+
+        });
+
     }
 
 
@@ -79,7 +91,6 @@ const GitSearch3 = () => {
     useEffect(() => {
         if (gitData.length && enterPress) {
             setSelected(gitData[cursor]);
-            console.warn('enter!')
             window.open(gitData[cursor].html_url, '_blank', 'noopener,noreferrer')
         }
     }, [cursor, enterPress]);
@@ -105,7 +116,7 @@ const GitSearch3 = () => {
                 </thead>
                 <tbody>
                 {gitData.map((e, i) => {
-                    return <tr className={`${i === cursor ? "selected" : ""}`}
+                    return <tr className={`${i === cursor ? "selected" : ""}`} onClick={() => setCursor(i)}
                                >
                         <td>{i + 1}</td>
                         <td>{e.login}</td>
