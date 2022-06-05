@@ -67,8 +67,6 @@ const GitSearch3 = () => {
     }
 
 
-
-
     useEffect(() => {
         if (gitData.length && downPress) {
             setCursor(currentPosition =>
