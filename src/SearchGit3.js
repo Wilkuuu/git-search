@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './App.css';
 
-
-
-
 const useKeyPress = function(targetKey) {
     const [keyPressed, setKeyPressed] = useState(false);
 
@@ -12,17 +9,14 @@ const useKeyPress = function(targetKey) {
             setKeyPressed(true);
         }
     }
-
     const upHandler = ({ key }) => {
         if (key === targetKey) {
             setKeyPressed(false);
         }
     };
-
     React.useEffect(() => {
         window.addEventListener("keydown", downHandler);
         window.addEventListener("keyup", upHandler);
-
         return () => {
             window.removeEventListener("keydown", downHandler);
             window.removeEventListener("keyup", upHandler);
@@ -47,7 +41,7 @@ const GitSearch3 = () => {
     const search = async (event) => {
         event.preventDefault();
         setIsLoaded(false)
-
+        setError(null)
         await Promise.all([
             fetch(`https://api.github.com/search/users?q=${searchValue}&page=1&per_page=50`),
             fetch(`https://api.github.com/search/repositories?q=${searchValue}&page=1&per_page=50`)
@@ -56,15 +50,14 @@ const GitSearch3 = () => {
                 return response.json();
             }));
         }).then( (data) => {
-            console.log(data);
             let compareData = []
             data.forEach(e =>  compareData = compareData.concat(e.items))
-            console.log(compareData);
-            compareData = compareData.map(e => {return {...e, login: e.login || e.name, type: e.type || 'Repository'}})
+            compareData = compareData.map(e => {return {...e, tempName: e.login || e.name, type: e.type || 'Repository'}})
+            compareData = compareData.sort((a,b) => a.tempName.localeCompare(b.tempName))
             setGitData(compareData)
 
         }).catch( (error) => {
-            // if there's an error, log it
+            setError(error)
             console.log(error);
         }).finally(() => {
             setIsLoaded(true)
@@ -78,14 +71,14 @@ const GitSearch3 = () => {
 
     useEffect(() => {
         if (gitData.length && downPress) {
-            setCursor(prevState =>
-                prevState < gitData.length - 1 ? prevState + 1 : prevState
+            setCursor(currentPosition =>
+                currentPosition < gitData.length - 1 ? currentPosition + 1 : currentPosition
             );
         }
     }, [downPress]);
     useEffect(() => {
         if (gitData.length && upPress) {
-            setCursor(prevState => (prevState > 0 ? prevState - 1 : prevState));
+            setCursor(currentPosition => (currentPosition > 0 ? currentPosition - 1 : currentPosition));
         }
     }, [upPress]);
     useEffect(() => {
@@ -119,7 +112,7 @@ const GitSearch3 = () => {
                     return <tr className={`${i === cursor ? "selected" : ""}`} onClick={() => setCursor(i)}
                                >
                         <td>{i + 1}</td>
-                        <td>{e.login}</td>
+                        <td>{e.tempName}</td>
                         <td>{e.type}</td>
                     </tr>
                 })}
