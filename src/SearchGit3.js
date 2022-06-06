@@ -95,7 +95,7 @@ const GitSearch3 = () => {
             </div>
             {!isLoaded ? <div><h2>Loading data</h2></div> : null}
             {gitData.length ?
-            <table>
+            <table id="gitDataTable">
                 <thead>
                 <tr>
                     <th>Id</th>
