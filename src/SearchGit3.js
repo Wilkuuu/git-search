@@ -32,7 +32,7 @@ const GitSearch3 = () => {
     const downPress = useKeyPress("ArrowDown");
     const upPress = useKeyPress("ArrowUp");
     const enterPress = useKeyPress("Enter");
-    const [cursor, setCursor] = useState(0);
+    const [cursor, setCursor] = useState(-1);
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(true);
     const [gitData, setGitData] = useState([]);
