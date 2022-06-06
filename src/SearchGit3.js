@@ -105,7 +105,7 @@ const GitSearch3 = () => {
                 </thead>
                 <tbody>
                 {gitData.map((e, i) => {
-                    return <tr className={`${i === cursor ? "selected" : ""}`} onClick={() => setCursor(i)}
+                    return <tr key={i} className={`${i === cursor ? "selected" : ""}`} onClick={() => setCursor(i)}
                                >
                         <td>{i + 1}</td>
                         <td>{e.tempName}</td>
