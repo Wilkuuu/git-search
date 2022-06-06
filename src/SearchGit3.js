@@ -14,7 +14,7 @@ const useKeyPress = function(targetKey) {
             setKeyPressed(false);
         }
     };
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener("keydown", downHandler);
         window.addEventListener("keyup", upHandler);
         return () => {
@@ -27,13 +27,11 @@ const useKeyPress = function(targetKey) {
 };
 
 const GitSearch3 = () => {
-    const [selected, setSelected] = useState(undefined);
     const [searchValue, setSearchValue] = useState('');
     const downPress = useKeyPress("ArrowDown");
     const upPress = useKeyPress("ArrowUp");
     const enterPress = useKeyPress("Enter");
     const [cursor, setCursor] = useState(0);
-    const [hovered, setHovered] = useState(undefined);
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(true);
     const [gitData, setGitData] = useState([]);
@@ -73,18 +71,17 @@ const GitSearch3 = () => {
                 currentPosition < gitData.length - 1 ? currentPosition + 1 : currentPosition
             );
         }
-    }, [downPress]);
+    }, [downPress, gitData]);
     useEffect(() => {
         if (gitData.length && upPress) {
             setCursor(currentPosition => (currentPosition > 0 ? currentPosition - 1 : currentPosition));
         }
-    }, [upPress]);
+    }, [upPress, gitData.length]);
     useEffect(() => {
         if (gitData.length && enterPress) {
-            setSelected(gitData[cursor]);
             window.open(gitData[cursor].html_url, '_blank', 'noopener,noreferrer')
         }
-    }, [cursor, enterPress]);
+    }, [cursor, enterPress, gitData]);
 
     return (
         <div>
