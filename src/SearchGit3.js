@@ -15,6 +15,7 @@ const useKeyPress = function(targetKey) {
         }
     };
     useEffect(() => {
+        setKeyPressed(false)
         window.addEventListener("keydown", downHandler);
         window.addEventListener("keyup", upHandler);
         return () => {
@@ -71,7 +72,7 @@ const GitSearch3 = () => {
                 currentPosition < gitData.length - 1 ? currentPosition + 1 : currentPosition
             );
         }
-    }, [downPress, gitData]);
+    }, [downPress, gitData.length]);
     useEffect(() => {
         if (gitData.length && upPress) {
             setCursor(currentPosition => (currentPosition > 0 ? currentPosition - 1 : currentPosition));
