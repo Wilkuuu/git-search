@@ -51,7 +51,7 @@ const GitSearch3 = () => {
         }).then( (data) => {
             let compareData = []
             data.forEach(e =>  compareData = compareData.concat(e.items))
-            compareData = compareData.map(e => {return {...e, tempName: e.login || e.name, type: e.type || 'Repository'}})
+            compareData = compareData.map(e => {return {...e, tempName: e.hasOwnProperty('login') ?  e.login : e.name, type: e.type || 'Repository'}})
             compareData = compareData.sort((a,b) => a.tempName.localeCompare(b.tempName))
             setGitData(compareData)
 
@@ -114,7 +114,7 @@ const GitSearch3 = () => {
                 })}
                 </tbody>
             </table>
-                : null}
+                : isLoaded ? <div>No data found</div> : null}
             {
                 error ?
                     <div>
