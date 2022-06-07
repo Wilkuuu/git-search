@@ -79,7 +79,7 @@ const GitSearch3 = () => {
         }
     }, [upPress, gitData.length]);
     useEffect(() => {
-        if (gitData.length && enterPress) {
+        if (gitData.length && enterPress && cursor > -1) {
             window.open(gitData[cursor].html_url, '_blank', 'noopener,noreferrer')
         }
     }, [cursor, enterPress, gitData]);
