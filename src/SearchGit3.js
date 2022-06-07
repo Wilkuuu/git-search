@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 const useKeyPress = function(targetKey) {
@@ -16,28 +16,28 @@ const useKeyPress = function(targetKey) {
     };
     useEffect(() => {
         setKeyPressed(false)
-        window.addEventListener("keydown", downHandler);
-        window.addEventListener("keyup", upHandler);
+        window.addEventListener('keydown', downHandler);
+        window.addEventListener('keyup', upHandler);
         return () => {
-            window.removeEventListener("keydown", downHandler);
-            window.removeEventListener("keyup", upHandler);
+            window.removeEventListener('keydown', downHandler);
+            window.removeEventListener('keyup', upHandler);
         };
     });
-
     return keyPressed;
 };
 
 const GitSearch3 = () => {
     const [searchValue, setSearchValue] = useState('');
-    const downPress = useKeyPress("ArrowDown");
-    const upPress = useKeyPress("ArrowUp");
-    const enterPress = useKeyPress("Enter");
+    const downPress = useKeyPress('ArrowDown');
+    const upPress = useKeyPress('ArrowUp');
+    const enterPress = useKeyPress('Enter');
     const [cursor, setCursor] = useState(-1);
     const [error, setError] = useState(null);
     const [isLoaded, setIsLoaded] = useState(true);
     const [gitData, setGitData] = useState([]);
 
     const search = async (event) => {
+        setCursor(-1)
         event.preventDefault();
         setIsLoaded(false)
         setError(null)
@@ -89,13 +89,13 @@ const GitSearch3 = () => {
             <h2>GitSearch 3</h2>
             <div>
                 <form onSubmit={search} >
-                    <input name="searchValue" value={searchValue} type="text" onChange={e => setSearchValue(e.target.value)}></input>
-                    <button type="submit" disabled={searchValue.length < 3}>Search</button>
+                    <input name='searchValue' value={searchValue} type='text' onChange={e => setSearchValue(e.target.value)}></input>
+                    <button type='submit' disabled={searchValue.length < 3}>Search</button>
                 </form>
             </div>
             {!isLoaded ? <div><h2>Loading data</h2></div> : null}
             {gitData.length ?
-            <table id="gitDataTable">
+            <table id='gitDataTable'>
                 <thead>
                 <tr>
                     <th>Id</th>
@@ -105,7 +105,7 @@ const GitSearch3 = () => {
                 </thead>
                 <tbody>
                 {gitData.map((e, i) => {
-                    return <tr key={i} className={`${i === cursor ? "selected" : ""}`} onClick={() => setCursor(i)}
+                    return <tr key={i} className={`${i === cursor ? 'selected' : ''}`} onClick={() => setCursor(i)}
                                >
                         <td>{i + 1}</td>
                         <td>{e.tempName}</td>

@@ -8,7 +8,12 @@ test('renders Git link', () => {
   expect(linkElement).toBeInTheDocument();
 });
 
-test('Empty list', () => {
-  render(<GitSearch3 />);
 
+test('init', () => {
+  render(<GitSearch3/>)
+  screen.debug();
 });
+
+test('display Table', () => {
+  setGitData
+})
