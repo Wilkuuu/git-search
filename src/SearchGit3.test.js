@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import App from './App';
 import GitSearch3 from './SearchGit3';
 
@@ -8,12 +8,18 @@ test('renders Git link', () => {
   expect(linkElement).toBeInTheDocument();
 });
 
-
-test('init', () => {
-  render(<GitSearch3/>)
-  screen.debug();
-});
-
-test('display Table', () => {
-  setGitData
+test('No error at start', () => {
+  const content = render(<GitSearch3/>)
+  expect(content.queryByTestId('error')).not.toBeTruthy()
 })
+
+test('Check button state', () => {
+  const content = render(<GitSearch3/>)
+  expect(content.getByText('Search').closest('button').disabled).toBeTruthy()
+})
+
+test('Disable table on start', () => {
+  const content = render(<GitSearch3/>)
+  expect(content.queryByTestId('gitDataTable')).not.toBeTruthy()
+})
+

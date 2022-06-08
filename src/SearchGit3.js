@@ -10,8 +10,6 @@ const useKeyPress = function(targetKey) {
         }
     }
     const upHandler = ({ key }) => {
-        console.warn(key, targetKey)
-
         if (key === targetKey) {
             setKeyPressed(false);
         }
@@ -91,8 +89,8 @@ const GitSearch3 = () => {
             <h2>GitSearch 3</h2>
             <div>
                 <form onSubmit={search} >
-                    <input name='searchValue' value={searchValue} type='text' onChange={e => setSearchValue(e.target.value)}></input>
-                    <button type='submit' disabled={searchValue.length < 3}>Search</button>
+                    <input id="searchValue" name='searchValue' value={searchValue} type='text' onChange={e => setSearchValue(e.target.value)}></input>
+                    <button id="search" type='submit' disabled={searchValue.length < 3}>Search</button>
                 </form>
             </div>
             {!isLoaded ? <div><h2>Loading data</h2></div> : null}
