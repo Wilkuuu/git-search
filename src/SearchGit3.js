@@ -4,12 +4,14 @@ import './App.css';
 const useKeyPress = function(targetKey) {
     const [keyPressed, setKeyPressed] = useState(false);
 
-    function downHandler({ key }) {
+    const downHandler = ({ key }) => {
         if (key === targetKey) {
             setKeyPressed(true);
         }
     }
     const upHandler = ({ key }) => {
+        console.warn(key, targetKey)
+
         if (key === targetKey) {
             setKeyPressed(false);
         }
